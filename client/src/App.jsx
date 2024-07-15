@@ -5,10 +5,13 @@ import Login from './pages/Login'
 import Profile from './pages/Profile'
 import Header from './components/Header'
 import SignUp from './pages/SignUp'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
     <BrowserRouter>
+    <ToastContainer />
     <Header />
      <Routes>
         <Route path='/' element={<Home />}/>

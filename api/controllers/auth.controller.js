@@ -8,7 +8,10 @@ try {
     if(!username || !password || !username){
         throw new Error('Provide all required parameters')
     }
-    
+    const userExist = await UserModel.findOne({email})
+    if(userExist){
+        throw new Error('User already exists')
+    }
     const hashedPassword = bcryptjs.hashSync(password, 10)
 
     const newUser = new UserModel({username, email, password: hashedPassword})
