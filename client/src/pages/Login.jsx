@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import {toast } from 'react-toastify'
 import {useDispatch, useSelector} from 'react-redux'
 import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice.js";
+import OAuth from "../components/OAuth.jsx";
 
 
 
@@ -98,6 +99,7 @@ const handleSubmit = async (e) => {
                         </div>
 
                         <button disabled={loading} type="submit" className="p-3 w-full bg-blue-600 hover:bg-blue-700 cursor-pointer text-white text-md rounded-lg disabled:opacity-80">{loading ? ('Loading...') : ('Login')}</button>
+                        <OAuth />
                     </form>
                     <p className="p-4">Dont have account? <Link to='/sign-up' className="cursor-pointer text-blue-500 hover:text-blue-700 hover:underline">Sign Up</Link></p>
                 </div>

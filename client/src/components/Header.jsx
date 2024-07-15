@@ -23,8 +23,13 @@ export default function
               <CiSearch className='cursor-pointer'/>
            
         </form>
-        <div className="py-1 px-2  text-lg font-semibold text-slate-700 bg-white rounded-md hover:text-red-700">
-          <Link to={'/login'} >Login</Link>
+        <div className='flex gap-2'>
+          <div>
+            <Link to={'/login'} className="p-2 px-4 text-lg font-semibold text-white border-2 hover:bg-white hover:text-slate-700 rounded-md" >Login</Link>
+          </div>
+          <div className='hidden md:inline' >
+            <Link to={'/sign-up'} className="p-2 px-3 text-lg font-semibold text-slate-700 bg-white rounded-md hover:text-white border-2 hover:bg-transparent">Sign Up</Link>
+          </div>
         </div>
     </header>
   )

@@ -45,7 +45,7 @@ export const SignIn = async (req, res, next) => {
         const token = jwt.sign({id: validUser._id}, process.env.JWT_SECRET_KEY);
 
 //Important to remove the password field before sending the json
-const { password: passW, ...rest } = validUser._doc
+        const { password: passW, ...rest } = validUser._doc
         res.cookie('access_token', token, {httpOnly: true, secure: true}).json({
             rest,
             message: 'Login successful',
@@ -59,3 +59,27 @@ const { password: passW, ...rest } = validUser._doc
 
    
 }
+
+export const Google = async (req, res, next) => {
+    try {
+ // signing in the user if the user exists, otherwise register the user
+        const validUser = await UserModel.findOne({email: req.body.email})
+        if (validUser) {
+            const token = jwt.sign({id: validUser._id}, process.env.JWT_SECRET_KEY);
+            const { password: passW, ...rest } = validUser._doc
+            res.cookie('access_token', token, {httpOnly: true, secure: true}).status(200).json(rest)
+        }else{
+// register user, first create a new password for them since password is 
+//required and google auth don't request for password
+            const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8) 
+            const hashedPassword = bcryptjs.hashSync(generatedPassword, 10)
+            const newUser = new UserModel({username: req.body.name.split(' ').join('').toLowerCase() + Math.random().toString(36).slice(-3), email: req.body.email, password: hashedPassword, avatar: req.body.photo})
+            await newUser.save();
+            const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY);
+            const { password: passW, ...rest } = newUser._doc
+            res.cookie('access_token', token, {httpOnly: true, secure: true}).status(200).json(rest)
+        }
+    } catch (error) {
+        next(error)
+    } 
+};
