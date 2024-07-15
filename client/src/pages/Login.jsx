@@ -4,14 +4,17 @@ import { PiUserCircleThin } from "react-icons/pi";
 import { TbEyeCheck, TbEyeClosed,  } from "react-icons/tb"; 
 import { Link, useNavigate } from "react-router-dom";
 import {toast } from 'react-toastify'
+import {useDispatch, useSelector} from 'react-redux'
+import { signInStart, signInSuccess, signInFailure } from "../redux/user/userSlice";
 
 
 
  
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const {loading, error} = useSelector((state) => state.user)
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const [formData, setFormData] = useState({   
       email: '',
       password: '',
@@ -27,7 +30,7 @@ const handleChange = (e) => {
 const handleSubmit = async (e) => {
   e.preventDefault();
  
-  setLoading(true)
+  dispatch(signInStart())
   const response = await fetch('/api/auth/signin', {
   method: 'POST',
   credentials: 'include',
@@ -38,16 +41,16 @@ const handleSubmit = async (e) => {
   const data = await response.json();
   
   if(data.success){
-    setLoading(false);
+    dispatch(signInSuccess(data));
     navigate('/')
     toast.success(data.message)
     
   }else{
-    setLoading(false);
+    dispatch(signInFailure(data.message));
     toast.error(data.message)
   }
  } catch (error) {
-  setLoading(false); 
+  dispatch(signInFailure(error.message));
   toast.error(error.message)
  }
 }
@@ -96,7 +99,7 @@ const handleSubmit = async (e) => {
 
                         <button disabled={loading} type="submit" className="p-3 w-full bg-blue-600 hover:bg-blue-700 cursor-pointer text-white text-md rounded-lg disabled:opacity-80">{loading ? ('Loading...') : ('Login')}</button>
                     </form>
-                    <p className="p-4">Already have account? <Link to='/sign-up' className="cursor-pointer text-blue-500 hover:text-blue-700 hover:underline">Sign Up</Link></p>
+                    <p className="p-4">Dont have account? <Link to='/sign-up' className="cursor-pointer text-blue-500 hover:text-blue-700 hover:underline">Sign Up</Link></p>
                 </div>
         </div>
     </section>

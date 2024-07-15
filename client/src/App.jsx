@@ -8,19 +8,21 @@ import SignUp from './pages/SignUp'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const App = () => {
   return (
-    <BrowserRouter>
-    <ToastContainer />
-    <Header />
-     <Routes>
-        <Route path='/' element={<Home />}/>
-        <Route path='/login' element={<Login />}/>
-        <Route path='/sign-up' element={<SignUp />}/>
-        <Route path='/profile' element={<Profile />}/>
-         
-     </Routes>
-    </BrowserRouter>
+    
+      <BrowserRouter>
+      <ToastContainer />
+      <Header />
+       <Routes>
+          <Route path='/' element={<Home />}/>
+          <Route path='/login' element={<Login />}/>
+          <Route path='/sign-up' element={<SignUp />}/>
+          <Route path='/profile' element={<Profile />}/>
+       </Routes>
+      </BrowserRouter>
+    
   )
 }
 
