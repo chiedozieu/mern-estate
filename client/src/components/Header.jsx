@@ -19,7 +19,7 @@ export default function Header () {
               <Link to='/' className=''>
                   <div className='relative'>
                     <span className='text-white font-base text-sm md:text-2xl'>Poco</span>
-                    <span className='text-white font-extrabold text-base md:text-4xl z-30'>Estate</span>
+                    <span className='text-white font-extrabold text-base md:text-4xl'>Estate</span>
                     <div className='hidden sm:inline-flex text-purple-200 text-2xl absolute left-full rounded-full w-5 h-5'>
                       <GiFamilyHouse className='hover:animate-bounce transition-all' />
                     </div>
