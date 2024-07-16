@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { PiUserCircleThin } from "react-icons/pi";
+import { TbCircleDotted } from "react-icons/tb";
 import { TbEyeCheck, TbEyeClosed,  } from "react-icons/tb"; 
 import { Link, useNavigate } from "react-router-dom";
 import {toast } from 'react-toastify'
@@ -132,7 +132,12 @@ const handleSubmit = async (e) => {
                             
                         </div>
 
-                        <button disabled={loading} type="submit" className="p-2 w-full bg-blue-600 hover:bg-blue-700 cursor-pointer text-white text-md rounded-lg disabled:opacity-80">{loading ? ('Loading...') : ('Sign Up')}</button>
+                      <button disabled={loading} type="submit" className="p-2 w-full bg-blue-600 hover:bg-blue-700 cursor-pointer text-white text-md rounded-lg disabled:opacity-80">{loading ? ( 
+                          <div className="flex items-center justify-center text-xl font-semibold animate-pulse"> 
+                                <TbCircleDotted className="animate-spin"/>
+                          </div>
+                          ) : ('Sign Up')}
+                      </button>
                         <OAuth />
                        
                     </form>

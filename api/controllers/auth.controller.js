@@ -76,7 +76,7 @@ export const Google = async (req, res, next) => {
 //required and google auth don't request for password
             const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8) 
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10)
-            const newUser = new UserModel({username: req.body.name.split(' ').join('').toLowerCase() + Math.random().toString(36).slice(-3), email: req.body.email, password: hashedPassword, avatar: req.body.photo})
+            const newUser = new UserModel({username: req.body.name.split(' ').join('').toLowerCase() + Math.random().toString(36).slice(-2), email: req.body.email, password: hashedPassword, avatar: req.body.photo})
             await newUser.save();
             const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY);
             const { password: passW, ...rest } = newUser._doc
