@@ -17,12 +17,13 @@ export default function Header () {
           
             <div className='container mx-auto flex justify-between items-center w-full'>
               <Link to='/' className=''>
-                  <span className='text-white font-base text-sm md:text-2xl'>Poco</span>
-                  <span className='text-white font-extrabold text-base md:text-4xl relative z-30'>Estate</span>
-              
-                     <div className='hidden sm:inline text-purple-200 text-2xl absolute left-56 rounded-full w-5 h-5'>
-                       <GiFamilyHouse className='hover:animate-bounce transition-all' />
-                     </div>
+                  <div className='relative'>
+                    <span className='text-white font-base text-sm md:text-2xl'>Poco</span>
+                    <span className='text-white font-extrabold text-base md:text-4xl z-30'>Estate</span>
+                    <div className='hidden sm:inline-flex text-purple-200 text-2xl absolute left-full rounded-full w-5 h-5'>
+                      <GiFamilyHouse className='hover:animate-bounce transition-all' />
+                    </div>
+                  </div>
               </Link>
                        
                       
@@ -35,7 +36,7 @@ export default function Header () {
                         {
               currentUser ?
               (<div className='flex items-center gap-2 text-white text-sm font-thin'>
-                 <span><span className='font-medium'>Hi </span>{currentUser?.rest?.username}!</span>
+                 <span className='hidden md:inline-block'><span className='font-medium'>Hi </span>{currentUser?.rest?.username}!</span>
                   <Link to={'/profile'} >          
                     <img src={currentUser?.rest?.avatar} alt="profile" className='rounded-full object-cover h-10 w-10' />
                   </Link>
