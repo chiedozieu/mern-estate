@@ -67,7 +67,10 @@ export const Google = async (req, res, next) => {
         if (validUser) {
             const token = jwt.sign({id: validUser._id}, process.env.JWT_SECRET_KEY);
             const { password: passW, ...rest } = validUser._doc
-            res.cookie('access_token', token, {httpOnly: true, secure: true}).status(200).json(rest)
+            res.cookie('access_token', token, {httpOnly: true, secure: true}).status(200).json({ rest,
+                message: 'Login successful',
+                success: true,
+                error: false})
         }else{
 // register user, first create a new password for them since password is 
 //required and google auth don't request for password
@@ -77,7 +80,10 @@ export const Google = async (req, res, next) => {
             await newUser.save();
             const token = jwt.sign({id: newUser._id}, process.env.JWT_SECRET_KEY);
             const { password: passW, ...rest } = newUser._doc
-            res.cookie('access_token', token, {httpOnly: true, secure: true}).status(200).json(rest)
+            res.cookie('access_token', token, {httpOnly: true, secure: true}).status(200).json({ rest,
+                message: 'Login successful',
+                success: true,
+                error: false})
         }
     } catch (error) {
         next(error)
