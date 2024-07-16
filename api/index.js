@@ -2,13 +2,17 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoute from './routes/auth.route.js';
+import userRoute from './routes/user.route.js'
+import cookieParser from 'cookie-parser';
 
 
 dotenv.config()
 
 const app = express();
-
+app.use(cookieParser())
 app.use(express.json());
+
+
 
 
 app.listen(3000, () => {
@@ -21,6 +25,7 @@ mongoose.connect(process.env.MONGO).then(() => {
 
 // app.use('/api/users', userRoute)
 app.use('/api/auth', authRoute)
+app.use('/api/user', userRoute)
 
 // middleware for error
 
