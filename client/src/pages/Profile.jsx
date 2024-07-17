@@ -4,7 +4,7 @@ import { TbEyeCheck, TbEyeClosed,  } from "react-icons/tb";
 import { Link, useNavigate } from "react-router-dom";
 import {toast } from 'react-toastify'
 import {useDispatch, useSelector} from 'react-redux'
-import { updateUserStart, updateUserSuccess, updateUserFailure } from "../redux/user/userSlice.js";
+import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart, deleteUserSuccess, deleteUserFailure } from "../redux/user/userSlice.js";
 import { useRef } from "react";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import { app } from "../firebase.js";
@@ -100,13 +100,33 @@ const handleFormSubmit = async (e) => {
       toast.success(data.message);
     } else {
       dispatch(updateUserFailure());
-      toast.error(data.message +' Statuscode ' +  data.statuscode);
+      toast.error(data.message);
     }
   } catch (error) {
     dispatch(updateUserFailure());
     toast.error(error.message);
   }
 };
+
+const handleDeleteUser = async () => {
+  try {
+    dispatch(deleteUserStart())
+    const response = await fetch(`/api/user/delete/${currentUser?.rest?._id}`, {
+      method: 'DELETE',
+    });
+    const data = await response.json();
+    if(data.success) {
+      dispatch(deleteUserSuccess());
+      toast.error(data.message);
+    }else{
+      dispatch(deleteUserFailure(error.message))
+      toast.error(data.message);
+    }
+  } catch (error) {
+    dispatch(deleteUserFailure(error.message))
+    toast.error(error.message);
+  }
+}
     
 
   return (
@@ -188,8 +208,12 @@ const handleFormSubmit = async (e) => {
                     </form>  
                     <div className="flex justify-around items-center">
                     
-                      <span className="text-red-700 p-1 hover:underline cursor-pointer font-semibold">Delete Account</span>
-                      <span className="text-red-700 p-1 hover:underline cursor-pointer font-semibold">Sign Out</span>
+                      <span onClick={handleDeleteUser} className="text-red-700 p-1 hover:underline cursor-pointer font-semibold">
+                        Delete Account
+                      </span>
+                      <span className="text-red-700 p-1 hover:underline cursor-pointer font-semibold">
+                        Sign Out
+                      </span>
                  
                    </div>                                                       
                 </div>
