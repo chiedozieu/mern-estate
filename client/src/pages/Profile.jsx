@@ -215,9 +215,9 @@ const handleLogOut = async () => {
                           }
                             
                           </button>
-                          {/* <button type="submit" className="p-3 w-full border-2 border-red-700 hover:bg-red-700 hover:text-white cursor-pointer text-red-700 text-md rounded-lg disabled:opacity-80">
+                          <Link to='/create-listing' type="submit" className="p-3 w-full border-2 border-red-700 hover:bg-red-700 hover:text-white cursor-pointer text-red-700 text-md rounded-lg disabled:opacity-80 text-center font-semibold">
                             Create Listing
-                          </button> */}
+                          </Link>
                         
                        
                     </form>  
