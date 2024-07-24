@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const listingSchema = new mongoose.Schema({
     name: {
         type: String,
-        unique: true
+        required: true
     }, 
    description: {
         type: String,
@@ -13,13 +13,17 @@ const listingSchema = new mongoose.Schema({
         type: String,
         required: true,  
     },
-    regularPrice: {
-        type: Number,
-        required: true,  
+    stateCategory: {
+        type: String,
+        required: true,
+    },
+    negotiable: {
+        type: Boolean,
+          
     },
     discountPrice: {
         type: Number,
-        required: true,  
+        required: true,   
     },
     bathrooms: {
         type: Number,
@@ -33,13 +37,14 @@ const listingSchema = new mongoose.Schema({
         type: Boolean,
           
     },
-    buildingType: {
-        type: String, 
-        required: true,  
-    },
+    
     type: {
         type: String,
-        required: true,  
+          
+    },
+    agreementType: {
+        type: String,
+          
     },
     imageUrls: {
         type: Array,
