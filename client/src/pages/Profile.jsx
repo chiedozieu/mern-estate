@@ -8,7 +8,8 @@ import { updateUserStart, updateUserSuccess, updateUserFailure, deleteUserStart,
 import { useRef } from "react";
 import {getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import { app } from "../firebase.js";
-
+import { RiDeleteBin5Line } from "react-icons/ri";
+import { CiEdit } from "react-icons/ci";
  
 
 
@@ -21,6 +22,7 @@ const Profile = () => {
     const [file, setFile] = useState(undefined)
     const [filePercent, setFilePercent] = useState(0)
     const [fileUploadError, setFileUploadError] = useState(false)
+    const [ userListings, setUserListings] = useState([])
 
   
 
@@ -142,10 +144,23 @@ const handleLogOut = async () => {
     toast.error(error.message)
   }
 }
+const handleShowListings = async () => {
+  try {
+    const response = await fetch(`api/user/listings/${currentUser.rest._id}`)
+    const data = await response.json()
+    if(data.success === false) {
+      return toast.error(data.message)
+    }
+    setUserListings(data)
     
+  } catch (error) {
+    toast.error(error.message) 
+  }
+}
 
   return (
     <section id="profile">
+     
         <div className=" container mx-auto p-4">
         <h1 className="text-center text-3xl font-semibold text-slate-700 my-5">Profile</h1>
                 <div className="bg-white w-full max-w-md mx-auto rounded-md p-5">
@@ -215,9 +230,11 @@ const handleLogOut = async () => {
                           }
                             
                           </button>
-                          <Link to='/create-listing' type="submit" className="p-3 w-full border-2 border-red-700 hover:bg-red-700 hover:text-white cursor-pointer text-red-700 text-md rounded-lg disabled:opacity-80 text-center font-semibold">
-                            Create Listing
-                          </Link>
+                          <div className="flex flex-nowrap justify-between gap-2">
+                            <Link to='/create-listing' type="submit" className="p-3 w-full border-2 border-red-700 hover:bg-red-700 hover:text-white cursor-pointer text-red-700 text-md rounded-lg disabled:opacity-80 text-center font-semibold">
+                              Create Listing
+                            </Link>
+                          </div>
                         
                        
                     </form>  
@@ -229,8 +246,36 @@ const handleLogOut = async () => {
                       <span onClick={handleLogOut} className="text-red-700 p-1 hover:underline cursor-pointer font-semibold">
                         Sign Out
                       </span>
-                 
-                   </div>                                                       
+                    </div> 
+
+                   
+                    <button onClick={handleShowListings} type="button" className="mt-7 w-full font-semibold text-green-700 hover:underline  bg-slate-100 p-2 rounded-full my-14">                            
+                      Show Listings
+                    </button>
+                    <p className="text-center font-extrabold text-slate-600 text-xl">Your Listings</p>
+
+                   { userListings && userListings.length > 0 && 
+                    userListings.map((listing, index) => {
+                      return ( 
+                        <div className="my-3">
+                          <div key={listing._id} className="flex border rounded-lg p-3 justify-between items-center gap-4">
+                          <Link to={`/listing/${listing._id}`} >
+                          <img src={listing.imageUrls[0]} alt=""  className="h-16 w-16 object-contain bg-slate-100 "/>
+                          </Link>
+                          <Link to={`/listing/${listing._id}`} className="text-slate-700 font-semibold hover:underline flex-1 cursor-pointer truncate " >
+                            <p className="text-slate-700 font-semibold hover:underline flex-1 cursor-pointer truncate "> {listing.name} </p>
+                          </Link>
+                          <div className="rounded-full bg-green-700 p-1 text-white w-6 h-6 flex items-center justify-center">
+                            <div className=""><button type="button"><CiEdit className="w-full"/></button></div>
+                          </div>
+                          <div className="rounded-full bg-red-700 p-1 text-white w-6 h-6 flex items-center justify-center">
+                            <div className=""><button type="button"><RiDeleteBin5Line className="w-full"/></button></div>
+                          </div>
+                          </div>
+                        </div>
+                      )
+                    })
+                   }                                                   
                 </div>
                
         </div>
