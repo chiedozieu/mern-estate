@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import UserModel from '../models/user.model.js';
 import { errorHandler } from '../utils/errorHandler.js';
+import ListingModel from '../models/listing.model.js';
 
 export const updateUser = async (req, res, next) => {
     if (req.user.id !== req.params.id) return next(errorHandler(401, 'You can only update your account'));
@@ -48,5 +49,18 @@ export const deleteUser = async (req, res, next) => {
         res.status(200).json({success: true, message:'User deleted'})
     } catch (error) {
        next(error) 
+    }
+};
+
+export const getUserListings = async (req, res, next) => {
+    if(req.user.id === req.params.id){
+        try {
+            const listings = await ListingModel.find({ userRef: req.params.id})
+            res.status(200).json(listings)
+        } catch (error) {
+            
+        }
+    } else {
+        next(errorHandler(401, 'You can only view your listing'))
     }
 };
