@@ -22,8 +22,8 @@ export default function CreateListing() {
     description: '',
     negotiable: false,
     discountPrice: 0,
-    bathrooms: 1,
-    bedrooms: 1,
+    bathrooms: 0,
+    bedrooms: 0,
     serviced: false,
     type: 'land',
     agreementType: 'rent',
@@ -271,8 +271,8 @@ export default function CreateListing() {
             <div className="flex gap-2 items-center">
               <input type="number"
                 id='bedrooms'
-                min='1'
-                max='10'
+                min='0'
+                // max='10'
                 onChange={handleChange}
                 value={formData.bedrooms}
                 className='p-3 border rounded-lg border-gray-300' />
@@ -281,8 +281,8 @@ export default function CreateListing() {
             <div className="flex gap-2 items-center">
               <input type="number"
                 id='bathrooms'
-                min='1'
-                max='10'
+                min='0'
+                // max='10'
                 onChange={handleChange}
                 value={formData.bathrooms}
                 className='p-3 border rounded-lg border-gray-300' />
@@ -293,6 +293,7 @@ export default function CreateListing() {
             <div className="flex gap-2 items-center">
               <input type="number"
                 id='discountPrice'
+                min={0}
                 onChange={handleChange}
                 value={formData.discountPrice}
                 className='p-3 border rounded-lg border-gray-300' />
