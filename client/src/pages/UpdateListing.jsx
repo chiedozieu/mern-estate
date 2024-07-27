@@ -9,7 +9,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { ImSpinner2 } from "react-icons/im";
 import { useSelector } from 'react-redux';
 import StateCategory from '../utils/StatesCategory';
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useParams} from 'react-router-dom'
 
 export default function CreateListing() {
   const [files, setFiles] = useState([]);
@@ -36,6 +36,24 @@ export default function CreateListing() {
   const [error, setError] = useState(false);
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate()
+  const params = useParams()
+
+
+useEffect(() => {
+    const fetchListing = async () => {
+        const listingId = params.listingId
+         const response = await fetch(`/api/listing/get/${listingId}`)
+         const data = await response.json() 
+
+         if(data.success === false){
+            console.log(data.message)
+            return
+         }
+         setFormData(data)
+    }
+    
+    fetchListing();
+}, [])
 
   const handleImageSubmit = async () => {
     const totalImages = files.length + formData.imageUrls.length;
@@ -64,10 +82,6 @@ export default function CreateListing() {
       }
     }
   };
-
-  // useEffect(() => {
-  //   handleImageSubmit()
-  // }, [files])
 
   const storeImage = async (file) => {
     return new Promise((resolve, reject) => {
@@ -159,7 +173,7 @@ export default function CreateListing() {
       
       setLoading(true);
       setError(false);
-      const response = await fetch('/api/listing/create', {
+      const response = await fetch(`/api/listing/update/${params.listingId}`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
@@ -180,9 +194,16 @@ export default function CreateListing() {
     }
   };
 
+  const handleRemoveImage = (index) => {
+    setFormData({
+      ...formData,
+      imageUrls: formData.imageUrls.filter((_, i) => i !== index),
+    });
+  };
+
   return (
     <main className='container mx-auto p-4'>
-      <h1 className='bg-blue-500 my-7 text-3xl max-w-sm text-center mx-auto p-4 font-extrabold text-white'>Create Listing</h1>
+      <h1 className='bg-green-500 my-7 text-3xl max-w-sm text-center mx-auto p-4 font-extrabold text-white'>Update Listing</h1>
       <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4'>
         <div className="flex flex-col gap-4 flex-1">
           <input id='name'
@@ -313,30 +334,43 @@ export default function CreateListing() {
           <p className='font-semibold'>Images: <span className='font-extralight text-xs text-gray-600 ml-2'>The first will be the cover (Min 2, Max 4)</span></p>
           <div className="grid gap-4">
             <div className="flex justify-between">
-              <div className="w-24 h-24 relative">
-                <label htmlFor="images"></label>
-                <input onChange={handleFileChange} type="file" id='images' accept='image/*' multiple hidden className='hidden' />
-                <label htmlFor="images">
-                  <div className="bg-blue-200 w-full h-full flex items-center justify-center gap-1 text-3xl cursor-pointer rounded-lg">
-                    <div className='flex flex-col items-center text-blue-700'>
-                      <LuImagePlus className=' hover:scale-110 transition-all ' />
-                      <div className='text-xs'>Choose files</div>
+              <div className="flex items-center gap-2">
+                <div className="w-24 h-24 relative">
+                  <label htmlFor="images"></label>
+                  <input onChange={handleFileChange} type="file" id='images' accept='image/*' multiple hidden className='hidden' />
+                  <label htmlFor="images">
+                    <div className="bg-green-200 w-full h-full flex items-center justify-center gap-1 text-3xl cursor-pointer rounded-lg">
+                      <div className='flex flex-col items-center text-green-700'>
+                        <LuImagePlus className=' hover:scale-110 transition-all ' />
+                        <div className='text-xs'>Choose files</div>
+                      </div>
+                      <p className='text-xs flex items-center justify-center rounded-full bg-green-500 text-white w-5 h-5 absolute top-0 right-0'>{files.length}</p>
                     </div>
-                    <p className='text-xs flex items-center justify-center rounded-full bg-blue-500 text-white w-5 h-5 absolute top-0 right-0'>{files.length}</p>
-                  </div>
-                </label>
+                  </label>
+                </div>
+                <div className="flex flex-wrap items-center justify-items-start gap-2">
+                
+                    {previews.map((preview, index) => (
+                      <div key={index} className="relative w-24 h-24">
+                        <img src={preview} alt={`preview-${index}`} className='object-cover w-full h-full rounded-lg' />
+                        <MdCancel onClick={() => removeImage(index)} className='absolute top-0 right-0 text-red-400 cursor-pointer bg-gray-50 rounded-full' />
+                      </div>
+                  ))}
+                </div>
               </div>
+              
+             
               {uploadImageLoading ? (
                 <button
                   type="button"
-                  className="h-24 w-24 flex items-center justify-center text-sm bg-blue-500 text-white rounded-lg cursor-pointer animate-pulse transition-all"
+                  className="h-24 w-24 flex items-center justify-center text-sm bg-green-500 text-white rounded-lg cursor-pointer animate-pulse transition-all"
                 >
                   <IoCloudUploadOutline className="w-6 h-6 animate-ping transition-all" />
                 </button>
               ) : (
                 <button
                   onClick={isWrongImageNumber ? handleDisabledClick : handleImageSubmit}
-                  className={`h-24 w-24 text-sm ${isWrongImageNumber ? 'bg-red-200 text-red-700' : 'bg-blue-200 text-blue-700 hover:text-base cursor-pointer'} transition-all rounded-lg p-1`}
+                  className={`h-24 w-24 text-sm ${isWrongImageNumber ? 'bg-red-200 text-red-700' : 'bg-green-200 text-green-700 hover:text-base cursor-pointer'} transition-all rounded-lg p-1`}
                   type='button'
                   disabled={isWrongImageNumber}
                 >
@@ -344,22 +378,26 @@ export default function CreateListing() {
                 </button>
               )}
             </div>
+            <p className='bg-green-200 p-1 text-green-700 text-center'>Uploaded Images</p>
             <div className="flex flex-wrap items-center justify-normal gap-2">
-              {previews.map((preview, index) => (
-                <div key={index} className="relative w-24 h-24">
-                  <img src={preview} alt={`preview-${index}`} className='object-cover w-full h-full rounded-lg' />
-                  <MdCancel onClick={() => removeImage(index)} className='absolute top-0 right-0 text-red-400 cursor-pointer bg-gray-50 rounded-full' />
-                </div>
+           
+                 
+                {formData.imageUrls.map((preview, index) => (
+                  <div key={index} className="relative w-24 h-24">
+                    <img src={preview} alt={`preview-${index}`} className='object-cover w-full h-full rounded-lg' />
+                    <MdCancel onClick={() => handleRemoveImage(index)} className='absolute top-0 right-0 text-red-400 cursor-pointer bg-gray-50 rounded-full' />
+                  </div>
+            
               ))}
             </div>
             <div className="">
               {loading ? (
-                <div className='flex items-center justify-center text-blue-500'>
+                <div className='flex items-center justify-center text-green-500'>
                   <ImSpinner2 className="w-8 h-8 animate-spin transition-all" />
                 </div>
               ) : (
                 <button className='p-2 border-2 border-purple-700 text-purple-700 w-full rounded-lg hover:bg-purple-700 hover:text-white'>
-                  Create Listing
+                  Update Listing
                 </button>
               )}
             </div>

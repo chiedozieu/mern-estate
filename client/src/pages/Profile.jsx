@@ -292,7 +292,7 @@ const handleListingDelete = async (listingId) => {
                                 </Link>
                                 <div className="flex flex-col gap-2 bg-slate-100 p-2 rounded-lg">
                                   <div className="rounded-full bg-green-700 p-1 text-white w-8 h-8 flex items-center justify-center">
-                                    <div className=""><button type="button"><CiEdit className="w-full"/></button></div>
+                                    <div className=""><Link to={`/update-listing/${listing._id}`} ><button type="button"><CiEdit className="w-full"/></button></Link></div>
                                   </div>
                                   <div className="rounded-full bg-red-700 p-1 text-white w-8 h-8 flex items-center justify-center">
                                     <div className=""><button onClick={()=>handleListingDelete(listing._id)} type="button"><RiDeleteBin5Line className="w-full"/></button></div>
