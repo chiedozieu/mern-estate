@@ -346,7 +346,7 @@ export default function CreateListing() {
             </div>
             <div className="flex flex-wrap items-center justify-normal gap-2">
               {previews.map((preview, index) => (
-                <div key={index} className="relative w-24 h-24">
+                <div key={index + preview} className="relative w-24 h-24">
                   <img src={preview} alt={`preview-${index}`} className='object-cover w-full h-full rounded-lg' />
                   <MdCancel onClick={() => removeImage(index)} className='absolute top-0 right-0 text-red-400 cursor-pointer bg-gray-50 rounded-full' />
                 </div>
@@ -358,7 +358,7 @@ export default function CreateListing() {
                   <ImSpinner2 className="w-8 h-8 animate-spin transition-all" />
                 </div>
               ) : (
-                <button className='p-2 border-2 border-purple-700 text-purple-700 w-full rounded-lg hover:bg-purple-700 hover:text-white'>
+                <button className='p-2 border-2 border-blue-700 text-blue-700 w-full rounded-lg hover:bg-blue-700 hover:text-white'>
                   Create Listing
                 </button>
               )}

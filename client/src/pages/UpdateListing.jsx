@@ -396,7 +396,7 @@ useEffect(() => {
                   <ImSpinner2 className="w-8 h-8 animate-spin transition-all" />
                 </div>
               ) : (
-                <button className='p-2 border-2 border-purple-700 text-purple-700 w-full rounded-lg hover:bg-purple-700 hover:text-white'>
+                <button className='p-2 border-2 border-green-700 text-green-700 w-full rounded-lg hover:bg-green-700 hover:text-white'>
                   Update Listing
                 </button>
               )}
