@@ -13,6 +13,8 @@ import { GiTakeMyMoney } from "react-icons/gi";
 import { FaBed } from "react-icons/fa";
 import { MdBathtub } from "react-icons/md";
 import { GiSecurityGate } from "react-icons/gi";
+import { useSelector } from 'react-redux';
+import ContactOwner from '../components/ContactOwner';
 
 
 export default function Listing() {
@@ -21,11 +23,11 @@ export default function Listing() {
     const [ listing, setListing ] = useState(null)
     const [loading, setLoading ] = useState(false)
     const [ error, setError ] = useState(false)
+    const [contactOwner, setContactOwner ] = useState(null)
+
+    const {currentUser} = useSelector((state) => state.user)
     
-
-console.log('listing:', listing)
-     
-
+    
 useEffect(() => {
     const fetchListing = async () => {
         try {
@@ -39,7 +41,7 @@ useEffect(() => {
                 setLoading(false)
                 return
             }
-            console.log('data;', data)
+             
             setListing(data)
             setLoading(false)
             
@@ -162,11 +164,16 @@ useEffect(() => {
                     </div>
                 </div>
 
+                {
+                    currentUser && listing.userRef !== currentUser.rest._id && !contactOwner &&
 
-
-
-
-
+                 <button onClick={() => setContactOwner(true)} className='bg-slate-700 rounded-lg text-white hover:opacity-95 p-2 max-w-md w-full'>
+                    Contact Owner
+                 </button>
+                }
+                {
+                    contactOwner && <ContactOwner listing={listing} />
+                }
 
 
 
