@@ -1,15 +1,37 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CiSearch } from "react-icons/ci";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { GiFamilyHouse } from "react-icons/gi";
 import {useSelector} from 'react-redux'
 
 export default function Header () {
   const {currentUser} = useSelector((state) => state.user)
+  const [searchTerm, setSearchTerm] = useState('')
+  const navigate = useNavigate()
 
   console.log('currentUser', currentUser)
 
 
+const handleSubmit = (e) => {
+  e.preventDefault()
+
+  const urlParams = new URLSearchParams(window.location.search)
+  urlParams.set('searchTerm', searchTerm)
+  const searchQuery = urlParams.toString()
+  navigate(`/search?${searchQuery}`)
+
+}
+
+
+useEffect(() => {
+const urlParams = new URLSearchParams(location.search)
+const searchTermFromUrl = urlParams.get('searchTerm')
+if (searchTermFromUrl){
+  setSearchTerm(searchTermFromUrl)
+}
+}, [location.search])
+
+//To get the url web search and make it same with the input search field
 
   return (
     <header className='w-full bg-blue-600 shadow-md py-3 px-6'>
@@ -27,11 +49,16 @@ export default function Header () {
               </Link>
                        
                       
-                      <form className='bg-slate-100 py-1 sm:py-2 rounded-md flex items-center px-3 text-slate-500'>
+            <form onSubmit={handleSubmit} className='bg-slate-100 py-1 sm:py-2 rounded-md flex items-center px-3 text-slate-500'>
               
-                <input type="text" placeholder='Search' className='bg-transparent outline-none w-20 sm:w-64 ' />
-                <CiSearch className='cursor-pointer'/>
-                         
+                <input type="text" placeholder='Search'
+                       onChange={(e)=>setSearchTerm(e.target.value)}
+                       value={searchTerm}
+                       className='bg-transparent outline-none w-20 sm:w-64 ' />
+                       <button>
+                           <CiSearch className='cursor-pointer'/>
+                       </button>
+                          
                       </form>
                         {
               currentUser ?
