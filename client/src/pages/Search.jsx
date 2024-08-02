@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { ImSpinner2 } from 'react-icons/im';
 import { useNavigate } from 'react-router-dom';
 import ListingItems from '../components/ListingItems';
+import StateCategory from '../utils/StatesCategory';
 
 export default function Search() {
   const navigate = useNavigate();
@@ -13,7 +14,7 @@ export default function Search() {
   const [sidebarData, setSidebarData] = useState({ 
     searchTerm: '',
     agreementType: 'all',
-    stateCategory: true,
+    stateCategory: '',
     serviced: false,
     negotiable: false,
     sort: 'created_at',
@@ -32,13 +33,13 @@ export default function Search() {
     const orderFromUrl = urlParams.get('order');
     const sortFromUrl = urlParams.get('sort');
 
-    if(searchTermFromUrl|| agreementTypeFromUrl || negotiableFromUrl || stateCategoryFromUrl || servicedFromUrl ||  orderFromUrl || sortFromUrl) {
+    if(searchTermFromUrl || agreementTypeFromUrl || negotiableFromUrl || stateCategoryFromUrl || servicedFromUrl ||  orderFromUrl || sortFromUrl) {
 
       setSidebarData({
         searchTerm: searchTermFromUrl || '',
         agreementType: agreementTypeFromUrl || 'all',
         negotiable: negotiableFromUrl === 'true' ? true : false,
-        stateCategory: stateCategoryFromUrl === 'true' ? true : false,
+        stateCategory: stateCategoryFromUrl || '',
         serviced: servicedFromUrl === 'true' ? true : false,
         order: orderFromUrl || 'desc',
         sort: sortFromUrl || 'created_at',
@@ -68,14 +69,15 @@ export default function Search() {
 
     if (id === 'all' || id === 'rent' || id === 'sale') {
       setSidebarData({ ...sidebarData, agreementType: id });
-    } else if (id === 'searchTerm') {
+    } else if (id === 'searchTerm' ) {
       setSidebarData({ ...sidebarData, searchTerm: value });
-    } else if (id === 'serviced' || id === 'stateCategory' || id === 'negotiable') {
+    } else if (id === 'stateCategory' ) {
+      setSidebarData({ ...sidebarData, stateCategory: value });
+    } else if (id === 'serviced' || id === 'negotiable') {
       setSidebarData({ ...sidebarData, [id]: checked });
     } else if (id === 'sort_order') {
       const sort = value.split('_')[0] || 'created_at';
       const order = value.split('_')[1] || 'desc';
-      // const [sort, order] = value.split('_');
       setSidebarData({ ...sidebarData, sort, order });
     }
   };
@@ -97,7 +99,7 @@ export default function Search() {
   };
 
   return (
-    <div className='container mx-auto p-2'>
+    <div className='container mx-auto'>
       <div className="flex flex-col md:flex-row md:min-h-[calc(100vh-95px)]">
         {/* left side */}
         <div id='left-side' className="flex-1 p-7 border-b-2 md:border-r-2 max-w-sm">
@@ -152,14 +154,17 @@ export default function Search() {
               </div>
             </div>
             <div className="flex gap-2 flex-wrap items-center">
-              <label className='font-semibold'>Location:</label>
-              <div className="flex gap-2">
-                <input type="checkbox" id="stateCategory"
-                  checked={sidebarData.stateCategory}
-                  onChange={handleChange}
-                  className='w-5' />
-                <span>State</span>
-              </div>
+              <label className='font-semibold'>Location:</label>            
+              <select value={sidebarData.stateCategory} id="stateCategory" onChange={handleChange} className="p-2 bg-white rounded-lg" >
+            <option value={''}>Select State</option>
+                  {
+                  StateCategory.map((state,index)=> {
+                        return (
+                            <option value={state.value} key={state.value+index}>{state.label}</option>
+                        )
+                    })
+                  }
+            </select>
             </div>
             <div className="flex items-center gap-2 ">
               <label className='font-semibold'>Sort:</label>
@@ -180,7 +185,7 @@ export default function Search() {
         </div>
 
         {/* right side */}
-        <div id='right-side' className="mt-5 flex-2 w-full">
+        <div id='right-side' className="mt-5 flex-2 w-full p-2">
           <h1 className='text-3xl font-semibold border-b p-2 text-slate-700'>Listing results</h1>
           <div className="flex flex-wrap gap-2 py-4 h-[calc(100vh-150px)] overflow-y-scroll w-full">
            

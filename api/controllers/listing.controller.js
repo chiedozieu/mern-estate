@@ -70,59 +70,117 @@ export const getListing = async (req, res, next) => {
     }
 };
 
-export const getListings= async (req, res, next) => {
-    try {
-        //  const limit = parseInt(req.query.limit) || 9;
-         const startIndex = parseInt(req.query.startIndex) || 0;
+// export const getListings= async (req, res, next) => {
+//     try {
+        
+//          const startIndex = parseInt(req.query.startIndex) || 0;
 
-         let serviced = req.query.serviced
-         if(serviced === undefined || serviced === 'false'){
-            serviced = { $in: [false, true] };
-         }
+//          let serviced = req.query.serviced
+//          if(serviced === undefined || serviced === 'false'){
+//             serviced = { $in: [false, true] };
+//          }
 
-         let negotiable = req.query.negotiable
-         if(negotiable === undefined || negotiable === 'false'){
-            negotiable = { $in: [false, true] };
-         }
+//          let negotiable = req.query.negotiable
+//          if(negotiable === undefined || negotiable === 'false'){
+//             negotiable = { $in: [false, true] };
+//          }
 
-         let type = req.query.type
-         if(type === undefined || type === 'all'){
-            type = { $in: ['land', 'building'] };
-         }
+//          let type = req.query.type
+//          if(type === undefined || type === 'all'){
+//             type = { $in: ['land', 'building'] };
+//          }
 
-         let agreementType = req.query.agreementType
-         if(agreementType === undefined || agreementType === 'all'){
-            agreementType = { $in: ['rent', 'sale'] };
-         }
+//          let agreementType = req.query.agreementType
+//          if(agreementType === undefined || agreementType === 'all'){
+//             agreementType = { $in: ['rent', 'sale'] };
+//          }
 
-         const searchTerm = req.query.searchTerm || '';
+//          const searchTerm = req.query.searchTerm || '';
+//          const stateCategory = req.query.stateCategory || '';
 
-         const sort = req.query.sort || 'createdAt';
+//          const sort = req.query.sort || 'createdAt';
 
-         const order = req.query.order || 'desc';
+//          const order = req.query.order || 'desc';
 
-         const listing = await ListingModel.find({
+//          const listing = await ListingModel.find({
 
-            '$or' : [
-            {
-            name: { $regex: searchTerm, $options: 'i'},
-        },
-        {
-            stateCategory: { $regex: searchTerm, $options: 'i'}
-        },
-        ],
-        serviced,
-        type,
-        negotiable,
-        agreementType,   
-         }).sort(
-            {[sort]: order}
-        ).skip(startIndex)
+//             '$or' : [
+//             {
+//             name: { $regex: searchTerm, $options: 'i'},
+//         },
+       
+//         ],
+//         serviced,
+//         type,
+//         negotiable,
+//         agreementType, 
+//         stateCategory,
+//          }).sort(
+//             {[sort]: order}
+//         ).skip(startIndex)
          
-        return res.status(200).json(listing)
+//         return res.status(200).json(listing)
  
 
+//     } catch (error) {
+//      next(error);   
+//     }
+// };
+
+
+export const getListings = async (req, res, next) => {
+    try {
+        const startIndex = parseInt(req.query.startIndex) || 0;
+
+        let serviced = req.query.serviced;
+        if (serviced === undefined || serviced === 'false') {
+            serviced = { $in: [false, true] };
+        }
+
+        let negotiable = req.query.negotiable;
+        if (negotiable === undefined || negotiable === 'false') {
+            negotiable = { $in: [false, true] };
+        }
+
+        let type = req.query.type;
+        if (type === undefined || type === 'all') {
+            type = { $in: ['land', 'building'] };
+        }
+
+        let agreementType = req.query.agreementType;
+        if (agreementType === undefined || agreementType === 'all') {
+            agreementType = { $in: ['rent', 'sale'] };
+        }
+
+        const searchTerm = req.query.searchTerm || '';
+        const stateCategory = req.query.stateCategory || '';
+
+        const sort = req.query.sort || 'createdAt';
+        const order = req.query.order || 'desc';
+
+        const query = {
+            '$or': [
+                {
+                    name: { $regex: searchTerm, $options: 'i' },
+                },
+            ],
+            serviced,
+            type,
+            negotiable,
+            agreementType,
+        };
+
+        // Only add stateCategory to the query if it's not an empty string
+        if (stateCategory) {
+            query.stateCategory = stateCategory;
+        }
+
+        const listing = await ListingModel.find(query)
+            .sort({ [sort]: order })
+            .skip(startIndex);
+
+        return res.status(200).json(listing);
     } catch (error) {
-     next(error);   
+        next(error);
     }
 };

@@ -209,7 +209,7 @@ export default function CreateListing() {
             required />
 
           <div className="">
-            <select required value={formData.stateCategory} id="stateCategory" className="p-3 bg-white rounder rounded-lg" onChange={handleChange}>
+            <select required value={formData.stateCategory} id="stateCategory" className="p-3 bg-white rounded-lg" onChange={handleChange}>
             <option value= {''}>Select State</option>
                   {
                     StateCategory.map((state,index)=> {
