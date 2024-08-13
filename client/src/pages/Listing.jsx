@@ -5,8 +5,8 @@ import { BiSolidErrorAlt } from "react-icons/bi";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import SwiperCore from 'swiper'
 import { Navigation } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
+import 'swiper/css/bundle'
+// import 'swiper/css/navigation';
 import displayNGNCurrency from '../utils/Naira';
 import { TfiLocationPin } from "react-icons/tfi";
 import { GiTakeMyMoney } from "react-icons/gi";
@@ -20,12 +20,18 @@ import ContactOwner from '../components/ContactOwner';
 export default function Listing() {
     SwiperCore.use([Navigation])
     const params = useParams()
-    const [ listing, setListing ] = useState(null)
-    const [loading, setLoading ] = useState(false)
+    const [listing, setListing] = useState(null)
+    const [loading, setLoading] = useState(false)
     const [ error, setError ] = useState(false)
     const [contactOwner, setContactOwner ] = useState(null)
 
     const {currentUser} = useSelector((state) => state.user)
+
+
+            console.log(listing?.imageUrls);
+    
+    
+   
     
     
 useEffect(() => {
@@ -78,37 +84,40 @@ useEffect(() => {
         listing && !error && !loading &&  
         
             <div className="container mx-auto p-4">
-                <Swiper navigation>
-                    {listing.imageUrls.map((imageUrl) => (
-                        <SwiperSlide key={imageUrl}>
-                            <div className="h-[550px]" style={{ background: `Url(${imageUrl}) center no-repeat`, backgroundSize: 'cover'}}>
-                            </div>
-                        </SwiperSlide>
-                    ))}
-                </Swiper>
+                <div className="max-w-4xl mx-auto p-4">
+                    <Swiper navigation modules={[Navigation]} className='w-full'>
+                        {listing?.imageUrls?.map((imageUrl) => (
+                            <SwiperSlide key={imageUrl} className='w-full'>
+                                {/* <div className="h-[550px]" style={{ background: `url(${imageUrl}) center no-repeat`, backgroundSize: 'cover'}}>
+                                </div> */}
+                                <img src={imageUrl} alt="listing" className="h-[500px] w-full object-cover" />
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </div>
                         
                             
                 <div className="listing-title flex max-w-lg gap-2 font-semibold justify-between text-xl my-4">
-                    <p>{listing.name}</p>
+                    <p>{listing?.name}</p>
                     {
-                    displayNGNCurrency(listing.discountPrice)
+                    displayNGNCurrency(listing?.discountPrice)
                     }
-                    {listing.agreementType === 'rent' && '/Year'}                          
+                    {listing?.agreementType === 'rent' && '/Year'}                          
                 </div>
 
 
                 <div className="flex items-center mt-5 text-sm font-thin gap-2">
                     <TfiLocationPin className='text-green-700'/>
                     <div className="flex gap-2">
-                        <span>{listing.address}</span>
-                        <span>{listing.stateCategory} State</span>
+                        <span>{listing?.address}</span>
+                        <span>{listing?.stateCategory} {listing?.stateCategory === 'Abuja' ? ('FCT') : ('State')}</span>
                     </div>
                 </div>
 
         
                 <div className="rent sale bg-red-700 max-w-[200px] text-white w-full text-center p-2 rounded-lg flex justify-between justify-items-end gap-4 ">
     
-                    <span>{listing.agreementType === 'rent' ? 'For Rent' : 'For Sale'}</span>
+                    <span>{listing?.agreementType === 'rent' ? 'For Rent' : 'For Sale'}</span>
                     <span className='land building text-sm font-thin'>{listing.type === 'land' ? 'Land' : 'Building'}</span>
                 </div>
 
@@ -117,14 +126,14 @@ useEffect(() => {
                     <span className='font-semibold text-black'>
                         Description  - {' '}
                     </span>
-                        {listing.description}
+                        {listing?.description}
                 </p>
                 </div> 
 
                 <div className="flex items-center flex-wrap justify-between gap-2 my-3 max-w-md">
                     <div className="negotiable">
                         {
-                            listing.negotiable &&
+                            listing?.negotiable &&
                         
                             <div className="flex items-center gap-1 text-base whitespace-nowrap">
                                 <GiTakeMyMoney className='text-green-700 text-xl'/>
@@ -134,17 +143,17 @@ useEffect(() => {
                     </div>
                     <div className="bedroom">
                         {
-                            listing.negotiable &&
+                            listing?.type === 'building' && listing.bathrooms > 1 && 
                         
                             <div className="flex items-center gap-1 text-base whitespace-nowrap">
                                 <FaBed className='text-green-700 text-xl'/>
-                                <p>{listing.bedrooms}{' '}Bedroom{listing.bedrooms > 1 && 's'}</p>
+                                <p>{listing?.bedrooms}{' '}Bedroom{listing?.bedrooms > 1 && 's'}</p>
                             </div>
                         }
                     </div>
                     <div className="bathroom">
                         {
-                            listing.type === 'building' &&
+                            listing.type === 'building' && listing.bathrooms > 0 && 
                         
                             <div className="flex items-center gap-1 text-base whitespace-nowrap">
                                 <MdBathtub  className='text-green-700 text-xl'/>
@@ -154,7 +163,7 @@ useEffect(() => {
                     </div>
                     <div className="serviced">
                         {
-                            listing.type === 'building' &&
+                            listing.type === 'building' && listing.serviced &&
                         
                             <div className="flex items-center gap-1 text-base whitespace-nowrap">
                                 <GiSecurityGate className='text-green-700 text-xl'/>

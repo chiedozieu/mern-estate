@@ -88,10 +88,14 @@ export default function Search() {
     urlParams.set('searchTerm', sidebarData.searchTerm);
     urlParams.set('agreementType', sidebarData.agreementType);
     urlParams.set('negotiable', sidebarData.negotiable);
-    urlParams.set('stateCategory', sidebarData.stateCategory);
+    // urlParams.set('stateCategory', sidebarData.stateCategory);
     urlParams.set('serviced', sidebarData.serviced);
     urlParams.set('order', sidebarData.order);
     urlParams.set('sort', sidebarData.sort);
+
+    if (sidebarData.stateCategory) {
+      urlParams.set('stateCategory', sidebarData.stateCategory);
+  }
 
     const searchQuery = urlParams.toString();
     navigate(`/search?${searchQuery}`)
