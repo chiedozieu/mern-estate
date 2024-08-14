@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { GiSpinningBlades } from "react-icons/gi";
 import { BiSolidErrorAlt } from "react-icons/bi";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -84,8 +84,11 @@ useEffect(() => {
         listing && !error && !loading &&  
         
             <div className="container mx-auto p-4">
+                <Link to={'/profile'} className="text-green-500 hover:underline">
+                  Profile
+                </Link>
                 <div className="max-w-4xl mx-auto p-4">
-                    <Swiper navigation modules={[Navigation]} className='w-full'>
+                    <Swiper navigation className='w-full'>
                         {listing?.imageUrls?.map((imageUrl) => (
                             <SwiperSlide key={imageUrl} className='w-full'>
                                 {/* <div className="h-[550px]" style={{ background: `url(${imageUrl}) center no-repeat`, backgroundSize: 'cover'}}>
